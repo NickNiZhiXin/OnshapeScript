@@ -1,0 +1,23 @@
+FeatureScript 708;
+import(path : "onshape/std/geometry.fs", version : "708.0");
+
+annotation { "Feature Type Name" : "Pocket Fillet" }
+export const pocketFillet = defineFeature(function(context is Context, id is Id, definition is map)
+    precondition
+    {
+        annotation { "Name" : "Face", "Filter" : EntityType.FACE, "MaxNumberOfPicks" : 1 }
+        definition.face is Query;
+        annotation { "Name" : "Radius" }
+        isLength(definition.radius, LENGTH_BOUNDS);
+        
+        
+    }
+    {
+        var faces = qConcaveConnectedFaces(definition.face);
+        var radius = definition.radius;
+        opFillet(context, id + "fillet1", {
+                "entities" : faces,
+                "radius" : radius,
+                "tangentPropgation": true
+        });
+    });
